@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+if [ $(id -u) -ne 0 ]; then
+  echo "ERROR! You must be root."
+  exit 1
+fi
+
+DESKTOP_PACKAGES="ubuntu-mate-desktop"
+HARDWARE_PACKAGES="pi-bluetooth"
+
+apt install "${DESKTOP_PACKAGES}^"
+apt install "${HARDWARE_PACKAGES}"
