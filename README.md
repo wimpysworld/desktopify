@@ -7,7 +7,6 @@ Augment Ubuntu Server into a desktop on Raspberry Pi
 
 - [ ] Optimise window manager
 - [ ] Enable initial setup
-- [ ] Drop `dpkg-architecture` requirement
 
 ## DONE
 
@@ -23,3 +22,4 @@ Augment Ubuntu Server into a desktop on Raspberry Pi
 - [x] Ubuntu MATE
 - [x] Ubuntu Studio
 - [x] Xubuntu
+- [x] Drop `dpkg-architecture` requirement
