@@ -1,6 +1,6 @@
 # desktopify
 
-Aumgent Ubuntu Server into a desktop on Raspberry Pi
+Augment Ubuntu Server into a desktop on Raspberry Pi
 
 
 ## TODO
