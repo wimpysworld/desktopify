@@ -6,6 +6,8 @@ Augment Ubuntu Server into a desktop on Raspberry Pi
 ## TODO
 
 - [ ] Optimise window manager
+- [ ] Enable initial setup
+- [ ] Drop `dpkg-architecture` requirement
 
 ## DONE
 
