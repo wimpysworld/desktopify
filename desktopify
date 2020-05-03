@@ -20,6 +20,13 @@ if [ "${IS_UBUNTU}" != "Ubuntu" ]; then
   exit 1
 fi
 
+# Check if we're running 20.04
+CODENAME=$(lsb_release -cs)
+if [ "${CODENAME}" != "focal" ]; then
+  echo "[!] This script is only intended to run on Ubuntu 20.04."
+  exit 1
+fi
+
 # Display help usage
 function usage () {
   echo
