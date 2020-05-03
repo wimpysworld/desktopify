@@ -9,15 +9,15 @@ fi
 # Check if we're running on a Raspberry Pi
 IS_PI=$(grep Model /proc/cpuinfo | grep Raspberry)
 if [ $? -ne 0 ]; then
- echo "[!] This is not a Raspberry Pi. Quitting!"
- exit 1
+  echo "[!] This is not a Raspberry Pi. Quitting!"
+  exit 1
 fi
 
 # Check if we're running Ubuntu
 IS_UBUNTU=$(lsb_release -is)
 if [ "${IS_UBUNTU}" != "Ubuntu" ]; then
- echo "[!] This script is only intended to run on Ubuntu."
- exit 1
+  echo "[!] This script is only intended to run on Ubuntu."
+  exit 1
 fi
 
 # Display help usage
