@@ -1,24 +1,108 @@
 #!/usr/bin/env bash
 
+# Check if the user running the script is root
 if [ $(id -u) -ne 0 ]; then
-  echo "ERROR! You must be root."
+  echo "[!] ERROR: You need to be root."
   exit 1
 fi
 
+# Check if we're running on a Raspberry Pi
 IS_PI=$(grep Model /proc/cpuinfo | grep Raspberry)
 if [ $? -ne 0 ]; then
-  echo "This is not a Raspberry Pi. Quitting!"
+  echo "[!] This is not a Raspberry Pi. Quitting!"
   exit 1
 fi
 
+# Check if we're running Ubuntu
 IS_UBUNTU=$(lsb_release -is)
 if [ "${IS_UBUNTU}" != "Ubuntu" ]; then
-  echo "This script is only intended to run on Ubuntu."
+  echo "[!] This script is only intended to run on Ubuntu."
   exit 1
 fi
 
-DESKTOP_PACKAGES="ubuntu-mate-desktop"
-HARDWARE_PACKAGES="pi-bluetooth"
+# Display help usage
+function usage () {
+  echo
+  echo "Usage"
+  echo "  $0 --de <desktop environment>"
+  echo
+  echo "Available desktop environments are"
+  echo "  ubuntu"
+  echo "  ubuntu-mate"
+  echo "  ubuntu-budgie"
+  echo "  ubuntu-kylin"
+  echo "  ubuntu-studio"
+  echo "  kubuntu"
+  echo "  lubuntu"
+  echo "  xubuntu"
+}
 
-apt install "${DESKTOP_PACKAGES}^"
-apt install "${HARDWARE_PACKAGES}"
+# Take command line arguments
+while [ $# -gt 0 ]; do
+  case "${1}" in
+    -de|--de)
+      DESKTOP_ENVIRONMENT="${2}"
+      shift
+      shift;;
+    -h|--h|-help|--help)
+      usage
+      exit 0;;
+    *)
+      echo "[!] ERROR: \"${1}\" is not a supported parameter."
+      echo "${DESKTOP_ENVIRONMENT}"
+      usage
+      exit 1;;
+  esac
+done
+
+# Set variables based on chosen desktop environment
+case "${DESKTOP_ENVIRONMENT}" in
+  ubuntu)
+    echo "specified ubuntu desktop"
+    DESKTOP_PACKAGES="ubuntu-desktop"
+    shift;;
+  ubuntu-mate)
+    echo "[+] Specified Ubuntu Mate desktop"
+    DESKTOP_PACKAGES="ubuntu-mate-desktop"
+    shift;;
+  ubuntu-budgie)
+    echo "[+] Specified Ubuntu Budgie desktop"
+    DESKTOP_PACKAGES="ubuntu-budgie-desktop"
+    shift;;
+  ubuntu-kylin)
+    echo "[+] Specified Ubunty Kylin desktop"
+    DESKTOP_PACKAGES="ubuntukylin-desktop"
+    shift;;
+  ubuntu-studio)
+    echo "[+] Specified Ubuntu Studio desktop"
+    DESKTOP_PACKAGES="ubuntustudio-desktop"
+    shift;;
+  kubuntu)
+    echo "[+] Specified Kubuntu desktop"
+    DESKTOP_PACKAGES="kubuntu-desktop"
+    shift;;
+  lubuntu)
+    echo "[+] Specified Lubuntu desktop"
+    DESKTOP_PACKAGES="lubuntu-desktop"
+    shift;;
+  xubuntu)
+    echo "[+] Specified Xubuntu desktop"
+    DESKTOP_PACKAGES="xubuntu-desktop"
+    shift;;
+  *)
+    if [ -z ${DESKTOP_ENVIRONMENT} ]; then
+      echo "[!] ERROR: Please specifiy a desktop environment"
+    else
+      echo "[!] ERROR: ${DESKTOP_ENVIRONMENT} is not a valid desktop environment"
+    fi
+    usage
+    exit 1;;
+esac
+
+
+# Do the installation
+HARDWARE_PACKAGES="pi-bluetooth"
+echo "[+] Will now install ${DESKTOP_PACKAGES} and ${HARWDARE_PACKAGES}"
+
+apt install -y "${DESKTOP_PACKAGES}^"
+apt install -y "${HARDWARE_PACKAGES}"
