@@ -153,7 +153,7 @@ esac
 
 # Do the installation
 HARDWARE_PACKAGES="pi-bluetooth"
-echo "[+] Will now install ${DESKTOP_PACKAGES} and ${HARWDARE_PACKAGES}"
+echo "[+] Will now install ${DESKTOP_PACKAGES} and ${HARDWARE_PACKAGES}"
 
 apt install -y "${DESKTOP_PACKAGES}^"
 apt install -y "${HARDWARE_PACKAGES}"
