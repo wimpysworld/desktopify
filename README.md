@@ -5,15 +5,19 @@ Augment Ubuntu Server into a desktop on Raspberry Pi
 
 ## TODO
 
-  * [ ] Enable Bluetooth
-  * [ ] Make sure it's Ubuntu on a Pi
-  * [ ] Make Network Manager the default backend
-  * [ ] Prevent low power WiFi mode
-  * [ ] Kubuntu
-  * [ ] Lubuntu
-  * [ ] Ubuntu
-  * [ ] Ubuntu Budgie
-  * [ ] Ubuntu Kylin
-  * [ ] Ubuntu MATE
-  * [ ] Ubuntu Studio
-  * [ ] Xubuntu
+- [ ] Optimise window manager
+
+## DONE
+
+- [x] Enable Bluetooth
+- [x] Make sure it's Ubuntu on a Pi
+- [x] Make Network Manager the default backend
+- [x] Prevent low power WiFi mode
+- [x] Kubuntu
+- [x] Lubuntu
+- [x] Ubuntu
+- [x] Ubuntu Budgie
+- [x] Ubuntu Kylin
+- [x] Ubuntu MATE
+- [x] Ubuntu Studio
+- [x] Xubuntu
