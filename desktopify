@@ -17,7 +17,7 @@ if ! grep Model /proc/cpuinfo | grep Raspberry 2>/dev/null; then
   echo "[!] This is not a Raspberry Pi. Quitting!"
   exit 1
 else
-  PI_MODEL=$(cat /proc/device-tree/model | tr -d '\0')
+  PI_MODEL=$(tr -d '\0' < /proc/device-tree/model)
   echo "[+] Configuring your ${PI_MODEL}"
 fi
 
