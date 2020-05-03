@@ -45,7 +45,8 @@ while [ $# -gt 0 ]; do
       shift
       shift;;
     -h|--h|-help|--help)
-      usage;;
+      usage
+      exit 0;;
     *)
       echo "ERROR! \"${1}\" is not a supported parameter."
       echo "${DESKTOP_ENVIRONMENT}"
