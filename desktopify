@@ -48,7 +48,7 @@ while [ $# -gt 0 ]; do
       usage
       exit 0;;
     *)
-      echo "ERROR! \"${1}\" is not a supported parameter."
+      echo "[!] ERROR: \"${1}\" is not a supported parameter."
       echo "${DESKTOP_ENVIRONMENT}"
       usage
       exit 1;;
