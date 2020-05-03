@@ -6,11 +6,20 @@ if [ $(id -u) -ne 0 ]; then
   exit 1
 fi
 
+HOST_ARCH=$(dpkg-architecture -q DEB_HOST_ARCH)
+if [ "${HOST_ARCH}" != "armhf" ] && [ "${HOST_ARCH}" != "arm64" ]; then
+  echo "[!] This script is only intended to run on ARM devices."
+  exit 1
+fi
+
 # Check if we're running on a Raspberry Pi
 IS_PI=$(grep Model /proc/cpuinfo | grep Raspberry)
 if [ $? -ne 0 ]; then
   echo "[!] This is not a Raspberry Pi. Quitting!"
   exit 1
+else
+  PI_MODEL=$(cat /proc/device-tree/model | tr -d '\0')
+  echo "[+] Configuring your ${PI_MODEL}"
 fi
 
 # Check if we're running Ubuntu
