@@ -53,6 +53,22 @@ function usage () {
   echo "  xubuntu"
 }
 
+function apply_tweaks() {
+  if [ "${DESKTOP_ENVIRONMENT}" == "ubuntu-mate" ]; then
+    cat <<EOM > /usr/share/glib-2.0/schemas/50_ubuntu-mate-raspi-tweaks.gschema.override
+[org.mate.interface]
+enable-animations=false
+
+[org.mate.Marco.general]
+compositing-manager=false
+
+[org.mate.session.required-components]
+windowmanager='marco-no-composite'
+EOM
+    glib-compile-schemas /usr/share/glib-2.0/schemas/
+  fi
+}
+
 # Take command line arguments
 while [ $# -gt 0 ]; do
   case "${1}" in
@@ -139,3 +155,5 @@ EOM
 if [ -e /etc/NetworkManager/conf.d/default-wifi-powersave-on.conf ]; then
   sed -i 's/wifi.powersave = 3/wifi.powersave = 2/' /etc/NetworkManager/conf.d/default-wifi-powersave-on.conf
 fi
+
+apply_tweaks
