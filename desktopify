@@ -141,7 +141,7 @@ case "${DESKTOP_ENVIRONMENT}" in
     DESKTOP_PACKAGES="xubuntu-desktop"
     shift;;
   *)
-    if [ -z ${DESKTOP_ENVIRONMENT} ]; then
+    if [ -z "${DESKTOP_ENVIRONMENT}" ]; then
       echo "[!] ERROR: Please specifiy a desktop environment"
     else
       echo "[!] ERROR: ${DESKTOP_ENVIRONMENT} is not a valid desktop environment"
