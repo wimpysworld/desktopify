@@ -22,3 +22,10 @@ HARDWARE_PACKAGES="pi-bluetooth"
 
 apt install "${DESKTOP_PACKAGES}^"
 apt install "${HARDWARE_PACKAGES}"
+
+mv /etc/netplan/50-cloud-init.yaml /etc/netplan/50-cloud-init.yaml.bak
+cat <<'EOF' > /etc/netplan/10-networkmanager-all.yaml
+network:
+  version: 2
+  renderer: NetworkManager
+EOF
