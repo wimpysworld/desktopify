@@ -42,6 +42,9 @@ Available desktop environments are
   ubuntu-mate
   ubuntu-studio
   xubuntu
+
+You can also pass the optiona --oem optional which will run a setup
+wizard on the next boot.
 ```
 
 ## TODO

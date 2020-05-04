@@ -15,6 +15,9 @@ function usage () {
   echo "  ubuntu-mate"
   echo "  ubuntu-studio"
   echo "  xubuntu"
+  echo
+  echo "You can also pass the optiona --oem optional which will run a setup"
+  echo "wizard on the next boot."
 }
 
 function apply_tweaks() {
@@ -51,6 +54,49 @@ EOM
     sed -i 's/wifi.powersave = 3/wifi.powersave = 2/' /etc/NetworkManager/conf.d/default-wifi-powersave-on.conf
   fi
 }
+
+function enable_oem() {
+  if [ ${ENABLE_OEM} -eq 1 ] && [ "${DESKTOP_ENVIRONMENT}" != "lubuntu" ]; then
+    apt -y install whois
+    local DATE=$(date +%m%H%M%S)
+    local PASSWD=$(mkpasswd -m sha-512 oem ${DATE})
+    addgroup --gid 29999 oem
+    adduser --gecos "OEM Configuration (temporary user)" --add_extra_groups --disabled-password --gid 29999 --uid 29999 oem
+    usermod -a -G sudo -p ${PASSWD} oem
+
+    if [ "${DESKTOP_ENVIRONMENT}" == "kubuntu" ]; then
+      apt-get -y install --no-install-recommends oem-config-kde ubiquity-frontend-kde ubiquity-ubuntu-artwork
+    else
+      apt-get -y install --no-install-recommends oem-config-gtk ubiquity-frontend-gtk ubiquity-ubuntu-artwork
+    fi
+
+    if [ "${DESKTOP_ENVIRONMENT}" == "ubuntu" ]; then
+      apt-get -y install --no-install-recommends oem-config-slideshow-ubuntu
+    elif [ "${DESKTOP_ENVIRONMENT}" == "ubuntu-budgie" ]; then
+      apt-get -y install --no-install-recommends oem-config-slideshow-ubuntu-budgie
+      # Force the slideshow to use Ubuntu Budgie artwork.
+      sed -i 's/oem-config-slideshow-ubuntu/oem-config-slideshow-ubuntu-budgie/' /usr/lib/ubiquity/plugins/ubi-usersetup.py
+      sed -i 's/oem-config-slideshow-ubuntu/oem-config-slideshow-ubuntu-budgie/' /usr/sbin/oem-config-remove-gtk
+      sed -i 's/ubiquity-slideshow-ubuntu/ubiquity-slideshow-ubuntu-budgie/' /usr/sbin/oem-config-remove-gtk
+    elif [ "${DESKTOP_ENVIRONMENT}" == "ubuntu-mate" ]; then
+      apt-get -y install --no-install-recommends oem-config-slideshow-ubuntu-mate
+      # Force the slideshow to use Ubuntu MATE artwork.
+      sed -i 's/oem-config-slideshow-ubuntu/oem-config-slideshow-ubuntu-mate/' /usr/lib/ubiquity/plugins/ubi-usersetup.py
+      sed -i 's/oem-config-slideshow-ubuntu/oem-config-slideshow-ubuntu-mate/' /usr/sbin/oem-config-remove-gtk
+      sed -i 's/ubiquity-slideshow-ubuntu/ubiquity-slideshow-ubuntu-mate/' /usr/sbin/oem-config-remove-gtk
+    fi
+
+    mkdir -p /var/log/installer
+    touch /var/log/installer/debug
+    cp -a /usr/lib/oem-config/oem-config.service /lib/systemd/system
+    cp -a /usr/lib/oem-config/oem-config.target /lib/systemd/system
+    systemctl enable oem-config.service
+    systemctl enable oem-config.target
+    systemctl set-default oem-config.target
+  fi
+}
+
+ENABLE_OEM=0
 
 # Take command line arguments
 while [ $# -gt 0 ]; do
