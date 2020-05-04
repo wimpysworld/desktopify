@@ -56,7 +56,7 @@ EOM
 }
 
 function enable_oem() {
-  if [ ${ENABLE_OEM} -eq 1 ] && [ "${DESKTOP_ENVIRONMENT}" != "lubuntu" ]; then
+  if [ "${ENABLE_OEM}" -eq 1 ] && [ "${DESKTOP_ENVIRONMENT}" != "lubuntu" ]; then
     apt -y install whois
     local DATE=$(date +%m%H%M%S)
     local PASSWD=$(mkpasswd -m sha-512 oem ${DATE})
