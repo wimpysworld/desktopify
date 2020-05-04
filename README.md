@@ -51,7 +51,6 @@ wizard on the next boot.
 
 - [ ] Create a snap
 - [ ] Install gpio tools
-- [ ] Install snaps
 - [ ] Emoji status
 - [ ] Enable boot splash
 
@@ -73,3 +72,4 @@ wizard on the next boot.
 - [x] Optimise Ubuntu MATE (Marco) window manager
 - [x] Enable initial setup
 - [x] Prevent pointless re-installs
+- [x] Install snaps

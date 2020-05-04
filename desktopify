@@ -98,7 +98,11 @@ function enable_oem() {
   fi
 }
 
+CLASSIC_SNAPS=()
+CONFINED_SNAPS=()
+DESKTOP_ENVIRONMENT=""
 ENABLE_OEM=0
+FORCE=0
 
 # Take command line arguments
 while [ $# -gt 0 ]; do
@@ -132,14 +136,17 @@ case "${DESKTOP_ENVIRONMENT}" in
   ubuntu)
     echo "specified ubuntu desktop"
     DESKTOP_PACKAGES="ubuntu-desktop"
+    CONFINED_SNAPS=(gnome-3-34-1804 gtk-common-themes snap-store)
     shift;;
   ubuntu-mate)
-    echo "[+] Specified Ubuntu Mate desktop"
+    echo "[+] Specified Ubuntu MATE desktop"
     DESKTOP_PACKAGES="ubuntu-mate-desktop"
+    CLASSIC_SNAPS=(ubuntu-mate-welcome software-boutique)
     shift;;
   ubuntu-budgie)
     echo "[+] Specified Ubuntu Budgie desktop"
     DESKTOP_PACKAGES="ubuntu-budgie-desktop"
+    CLASSIC_SNAPS=(ubuntu-budgie-welcome)
     shift;;
   ubuntu-kylin)
     echo "[+] Specified Ubunty Kylin desktop"
@@ -210,7 +217,21 @@ fi
 HARDWARE_PACKAGES="pi-bluetooth"
 echo "[+] Will now install ${DESKTOP_PACKAGES} and ${HARDWARE_PACKAGES}"
 
-apt install -y "${DESKTOP_PACKAGES}^"
+#Check if system already has a desktop installed
+if [ "$(apt list --installed "${DESKTOP_ENVIRONMENT}" 2>/dev/null)" ] && [ "${FORCE}" -eq 0 ]; then
+  echo "[*] WARNING: ${DESKTOP_ENVIRONMENT} already installed. To force install use -force or --force flags."
+else
+  apt install -y "${DESKTOP_PACKAGES}^"
+fi
+
+for CLASSIC_SNAP in "${CLASSIC_SNAPS[@]}"; do
+  snap install "${CLASSIC_SNAP}" --classic
+done
+
+for CONFINED_SNAP in "${CONFINED_SNAPS[@]}"; do
+  snap install "${CONFINED_SNAP}"
+done
+
 apt install -y "${HARDWARE_PACKAGES}"
 
 configure_network
