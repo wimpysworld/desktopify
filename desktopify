@@ -129,8 +129,6 @@ while [ $# -gt 0 ]; do
   esac
 done
 
-
-
 # Set variables based on chosen desktop environment
 case "${DESKTOP_ENVIRONMENT}" in
   ubuntu)
