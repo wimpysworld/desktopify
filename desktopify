@@ -7,13 +7,13 @@ function usage () {
   echo "  $0 --de <desktop environment>"
   echo
   echo "Available desktop environments are"
+  echo "  lubuntu"
+  echo "  kubuntu"
   echo "  ubuntu"
-  echo "  ubuntu-mate"
   echo "  ubuntu-budgie"
   echo "  ubuntu-kylin"
+  echo "  ubuntu-mate"
   echo "  ubuntu-studio"
-  echo "  kubuntu"
-  echo "  lubuntu"
   echo "  xubuntu"
 }
 
