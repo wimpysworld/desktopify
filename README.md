@@ -43,7 +43,7 @@ Available desktop environments are
   ubuntu-studio
   xubuntu
 
-You can also pass the optiona --oem optional which will run a setup
+You can also pass the optional --oem option which will run a setup
 wizard on the next boot.
 ```
 
