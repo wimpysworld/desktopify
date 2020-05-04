@@ -69,6 +69,7 @@ EOM
   fi
 }
 
+function enable_oem() {
 # Take command line arguments
 while [ $# -gt 0 ]; do
   case "${1}" in
@@ -79,6 +80,9 @@ while [ $# -gt 0 ]; do
     -h|--h|-help|--help)
       usage
       exit 0;;
+    -oem|--oem)
+      ENABLE_OEM=1
+      shift;;
     *)
       echo "[!] ERROR: \"${1}\" is not a supported parameter."
       echo "${DESKTOP_ENVIRONMENT}"
@@ -157,3 +161,4 @@ if [ -e /etc/NetworkManager/conf.d/default-wifi-powersave-on.conf ]; then
 fi
 
 apply_tweaks
+enable_oem
