@@ -99,6 +99,7 @@ function enable_oem() {
 }
 
 ENABLE_OEM=0
+FORCE=0
 
 # Take command line arguments
 while [ $# -gt 0 ]; do
@@ -171,15 +172,6 @@ case "${DESKTOP_ENVIRONMENT}" in
     exit 1;;
 esac
 
-#Check if system already has a desktop installed
-if [ "$(apt list --installed | grep ubuntu-desktop)" ] || [ "$(apt list --installed | grep ubuntu-budgie-desktop)" ] || 
-  [ "$(apt list --installed | grep ubuntu-mate-desktop)" ] || [ "$(apt list --installed | grep ubuntukylin-desktop)" ] || 
-  [ "$(apt list --installed | grep ubuntustudio-desktop)" ] || [ "$(apt list --installed | grep kubuntu-desktop)" ] || 
-  [ "$(apt list --installed | grep lubuntu-desktop)" ] || [ "$(apt list --installed | grep xubuntu-desktop)" ] && [ "$FORCE" == 0 ]; then
-  echo "[!] ERROR: Desktop already installed. To force install use -force or --force flags."
-  exit 1
-fi
-
 # Check if the user running the script is root
 if [ "$(id -u)" -ne 0 ]; then
   echo "[!] ERROR: You need to be root."
@@ -219,7 +211,13 @@ fi
 HARDWARE_PACKAGES="pi-bluetooth"
 echo "[+] Will now install ${DESKTOP_PACKAGES} and ${HARDWARE_PACKAGES}"
 
-apt install -y "${DESKTOP_PACKAGES}^"
+#Check if system already has a desktop installed
+if [ "$(apt list --installed "${DESKTOP_ENVIRONMENT}" 2>/dev/null)" ] && [ "${FORCE}" -eq 0 ]; then
+  echo "[*] WARNING: ${DESKTOP_ENVIRONMENT} already installed. To force install use -force or --force flags."
+else
+  apt install -y "${DESKTOP_PACKAGES}^"
+fi
+
 apt install -y "${HARDWARE_PACKAGES}"
 
 configure_network

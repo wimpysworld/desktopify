@@ -54,7 +54,6 @@ wizard on the next boot.
 - [ ] Install snaps
 - [ ] Emoji status
 - [ ] Enable boot splash
-- [ ] Prevent pointless re-installs
 
 ## DONE
 
@@ -73,3 +72,4 @@ wizard on the next boot.
 - [x] Drop `dpkg-architecture` requirement
 - [x] Optimise Ubuntu MATE (Marco) window manager
 - [x] Enable initial setup
+- [x] Prevent pointless re-installs
