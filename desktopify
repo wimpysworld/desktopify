@@ -106,7 +106,7 @@ while [ $# -gt 0 ]; do
       shift
       shift;;
     -force|--force)
-      $FORCE=1
+      FORCE=1
       shift
       shift;;
     -h|--h|-help|--help)
