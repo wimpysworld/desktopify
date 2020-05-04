@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Check if the user running the script is root
-if [ $(id -u) -ne 0 ]; then
+if [ "$(id -u)" -ne 0 ]; then
   echo "[!] ERROR: You need to be root."
   exit 1
 fi
@@ -13,13 +13,12 @@ if [ "${HOST_ARCH}" != "armv7l" ] && [ "${HOST_ARCH}" != "aarch64" ]; then
 fi
 
 # Check if we're running on a Raspberry Pi
-IS_PI=$(grep Model /proc/cpuinfo | grep Raspberry)
-if [ $? -ne 0 ]; then
+PI_MODEL=$(grep ^Model /proc/cpuinfo  | cut -d':' -f2- | sed 's/ R/R/')
+if [[ "${PI_MODEL}" == *"Raspberry Pi"* ]]; then
+  echo "[+] Configuring your ${PI_MODEL}"
+else
   echo "[!] This is not a Raspberry Pi. Quitting!"
   exit 1
-else
-  PI_MODEL=$(cat /proc/device-tree/model | tr -d '\0')
-  echo "[+] Configuring your ${PI_MODEL}"
 fi
 
 # Check if we're running Ubuntu
@@ -69,7 +68,25 @@ EOM
   fi
 }
 
-function enable_oem() {
+function configure_network() {
+  echo "[+] Will now configure network"
+  # Disable cloud-init from managing the network
+  echo "network: {config: disabled}" > /etc/cloud/cloud.cfg.d/99-disable-network-config.cfg
+
+  # Instruct netplan to hand all network management to NetworkManager
+  cat <<EOM > /etc/netplan/01-network-manager-all.yaml
+# Let NetworkManager manage all devices on this system
+network:
+  version: 2
+  renderer: NetworkManager
+EOM
+
+  # Disable Wifi Powersaving to improve Pi WiFi performance
+  if [ -e /etc/NetworkManager/conf.d/default-wifi-powersave-on.conf ]; then
+    sed -i 's/wifi.powersave = 3/wifi.powersave = 2/' /etc/NetworkManager/conf.d/default-wifi-powersave-on.conf
+  fi
+}
+
 # Take command line arguments
 while [ $# -gt 0 ]; do
   case "${1}" in
@@ -126,7 +143,7 @@ case "${DESKTOP_ENVIRONMENT}" in
     DESKTOP_PACKAGES="xubuntu-desktop"
     shift;;
   *)
-    if [ -z ${DESKTOP_ENVIRONMENT} ]; then
+    if [ -z "${DESKTOP_ENVIRONMENT}" ]; then
       echo "[!] ERROR: Please specifiy a desktop environment"
     else
       echo "[!] ERROR: ${DESKTOP_ENVIRONMENT} is not a valid desktop environment"
@@ -138,27 +155,11 @@ esac
 
 # Do the installation
 HARDWARE_PACKAGES="pi-bluetooth"
-echo "[+] Will now install ${DESKTOP_PACKAGES} and ${HARWDARE_PACKAGES}"
+echo "[+] Will now install ${DESKTOP_PACKAGES} and ${HARDWARE_PACKAGES}"
 
 apt install -y "${DESKTOP_PACKAGES}^"
 apt install -y "${HARDWARE_PACKAGES}"
 
-echo "[+] Will now configure network"
-# Disable cloud-init from managing the network
-echo "network: {config: disabled}" > /etc/cloud/cloud.cfg.d/99-disable-network-config.cfg
-
-# Instruct netplan to hand all network management to NetworkManager
-cat <<EOM > /etc/netplan/01-network-manager-all.yaml
-# Let NetworkManager manage all devices on this system
-network:
-  version: 2
-  renderer: NetworkManager
-EOM
-
-# Disable Wifi Powersaving to improve Pi WiFi performance
-if [ -e /etc/NetworkManager/conf.d/default-wifi-powersave-on.conf ]; then
-  sed -i 's/wifi.powersave = 3/wifi.powersave = 2/' /etc/NetworkManager/conf.d/default-wifi-powersave-on.conf
-fi
-
+configure_network
 apply_tweaks
 enable_oem
