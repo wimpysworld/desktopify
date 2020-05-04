@@ -99,7 +99,6 @@ function enable_oem() {
 }
 
 ENABLE_OEM=0
-FORCE=0
 
 # Take command line arguments
 while [ $# -gt 0 ]; do
@@ -211,13 +210,7 @@ fi
 HARDWARE_PACKAGES="pi-bluetooth"
 echo "[+] Will now install ${DESKTOP_PACKAGES} and ${HARDWARE_PACKAGES}"
 
-#Check if system already has a desktop installed
-if [ "$(apt list --installed "${DESKTOP_ENVIRONMENT}" 2>/dev/null)" ] && [ "${FORCE}" -eq 0 ]; then
-  echo "[*] WARNING: ${DESKTOP_ENVIRONMENT} already installed. To force install use -force or --force flags."
-else
-  apt install -y "${DESKTOP_PACKAGES}^"
-fi
-
+apt install -y "${DESKTOP_PACKAGES}^"
 apt install -y "${HARDWARE_PACKAGES}"
 
 configure_network
