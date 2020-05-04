@@ -2,10 +2,11 @@
 
 Augment Ubuntu Server into a desktop on Raspberry Pi
 
-
 ## TODO
 
-- [ ] Enable initial setup
+- [ ] Create a snap
+- [ ] Install gpio tools
+- [ ] Install snaps
 
 ## DONE
 
@@ -23,3 +24,4 @@ Augment Ubuntu Server into a desktop on Raspberry Pi
 - [x] Xubuntu
 - [x] Drop `dpkg-architecture` requirement
 - [x] Optimise Ubuntu MATE (Marco) window manager
+- [x] Enable initial setup
