@@ -52,6 +52,9 @@ wizard on the next boot.
 - [ ] Create a snap
 - [ ] Install gpio tools
 - [ ] Install snaps
+- [ ] Emoji status
+- [ ] Enable boot splash
+- [ ] Prevent pointless re-installs
 
 ## DONE
 
