@@ -105,6 +105,10 @@ while [ $# -gt 0 ]; do
       DESKTOP_ENVIRONMENT="${2}"
       shift
       shift;;
+    -force|--force)
+      $FORCE=1
+      shift
+      shift;;
     -h|--h|-help|--help)
       usage
       exit 0;;
@@ -118,6 +122,8 @@ while [ $# -gt 0 ]; do
       exit 1;;
   esac
 done
+
+
 
 # Set variables based on chosen desktop environment
 case "${DESKTOP_ENVIRONMENT}" in
@@ -162,6 +168,15 @@ case "${DESKTOP_ENVIRONMENT}" in
     usage
     exit 1;;
 esac
+
+#Check if system already has a desktop installed
+if [ "$(apt list --installed | grep ubuntu-desktop)" ] || [ "$(apt list --installed | grep ubuntu-budgie-desktop)" ] || 
+  [ "$(apt list --installed | grep ubuntu-mate-desktop)" ] || [ "$(apt list --installed | grep ubuntukylin-desktop)" ] || 
+  [ "$(apt list --installed | grep ubuntustudio-desktop)" ] || [ "$(apt list --installed | grep kubuntu-desktop)" ] || 
+  [ "$(apt list --installed | grep lubuntu-desktop)" ] || [ "$(apt list --installed | grep xubuntu-desktop)" ] && [ "$FORCE" == 0 ]; then
+  echo "[!] ERROR: Desktop already installed. To force install use -force or --force flags."
+  exit 1
+fi
 
 # Check if the user running the script is root
 if [ "$(id -u)" -ne 0 ]; then
