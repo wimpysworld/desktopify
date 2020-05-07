@@ -16,7 +16,7 @@ function usage () {
   echo "  ubuntu-studio"
   echo "  xubuntu"
   echo
-  echo "You can also pass the optiona --oem optional which will run a setup"
+  echo "You can also pass the optional --oem optional which will run a setup"
   echo "wizard on the next boot."
 }
 
