@@ -212,7 +212,7 @@ if [ "${CODENAME}" != "focal" ]; then
 fi
 
 # Do the installation
-HARDWARE_PACKAGES="pi-bluetooth"
+HARDWARE_PACKAGES="pi-bluetooth libgpiod-dev python3-libgpiod python3-gpiozero"
 echo "[+] Will now install ${DESKTOP_PACKAGES} and ${HARDWARE_PACKAGES}"
 
 #Check if system already has a desktop installed
