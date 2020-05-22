@@ -98,6 +98,30 @@ function enable_oem() {
   fi
 }
 
+function message() {
+  # Message types
+  # 0 - info
+  # 1 - warning
+  # 2 - error
+
+  local RED="\e[31m"
+  local GREEN="\e[32m"
+  local YELLOW="\e[33m"
+  local RESET="\e[0m"
+  local MESSAGE_TYPE=""
+  local MESSAGE=""
+  MESSAGE_TYPE=$1
+  MESSAGE=$2
+  
+  if [[ ${MESSAGE_TYPE} -eq 0 ]]; then
+    echo -e "  [${GREEN}+${RESET}] INFO: ${MESSAGE}"
+  elif [[ ${MESSAGE_TYPE} -eq 1 ]]; then
+    echo -e "  [${YELLOW}*${RESET}] WARNING : ${MESSAGE}"
+  elif [[ ${MESSAGE_TYPE} -eq 2 ]]; then
+    echo -e "  [${RED}!${RESET}] ERROR : ${MESSAGE}"
+  fi
+}
+
 CLASSIC_SNAPS=()
 CONFINED_SNAPS=()
 DESKTOP_ENVIRONMENT=""
