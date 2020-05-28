@@ -230,7 +230,7 @@ for CONFINED_SNAP in "${CONFINED_SNAPS[@]}"; do
   snap install "${CONFINED_SNAP}"
 done
 
-apt install -y "${HARDWARE_PACKAGES}"
+apt install -y ${HARDWARE_PACKAGES}
 
 configure_network
 apply_tweaks
