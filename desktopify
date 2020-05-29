@@ -16,7 +16,7 @@ function usage () {
   echo "  ubuntu-studio"
   echo "  xubuntu"
   echo
-  echo "You can also pass the optiona --oem optional which will run a setup"
+  echo "You can also pass the optional --oem optional which will run a setup"
   echo "wizard on the next boot."
 }
 
@@ -236,15 +236,15 @@ if [ "${CODENAME}" != "focal" ]; then
 fi
 
 # Do the installation
-HARDWARE_PACKAGES="pi-bluetooth"
+HARDWARE_PACKAGES="pi-bluetooth libgpiod-dev python3-libgpiod python3-gpiozero"
 echo "[+] Will now install ${DESKTOP_PACKAGES} and ${HARDWARE_PACKAGES}"
 
 #Check if system already has a desktop installed
-if [ "$(apt list --installed "${DESKTOP_ENVIRONMENT}" 2>/dev/null)" ] && [ "${FORCE}" -eq 0 ]; then
-  echo "[*] WARNING: ${DESKTOP_ENVIRONMENT} already installed. To force install use -force or --force flags."
-else
+#if [ "$(apt list --installed "${DESKTOP_PACKAGES}" 2>/dev/null)" ] && [ "${FORCE}" -eq 0 ]; then
+#  echo "[*] WARNING: ${DESKTOP_PACKAGES} already installed. To force install use -force or --force flags."
+#else
   apt install -y "${DESKTOP_PACKAGES}^"
-fi
+#fi
 
 for CLASSIC_SNAP in "${CLASSIC_SNAPS[@]}"; do
   snap install "${CLASSIC_SNAP}" --classic
@@ -254,7 +254,7 @@ for CONFINED_SNAP in "${CONFINED_SNAPS[@]}"; do
   snap install "${CONFINED_SNAP}"
 done
 
-apt install -y "${HARDWARE_PACKAGES}"
+apt install -y ${HARDWARE_PACKAGES}
 
 configure_network
 apply_tweaks
