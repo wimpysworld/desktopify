@@ -24,6 +24,8 @@ to one of the official Ubuntu desktop flavours.
       * You will be prompted to change the password
   * Clone the project
       * `git clone https://github.com/wimpysworld/desktopify.git`
+      OR
+      * `git clone https://git.io/JfKRT`
   * Convert the server to a desktop
     * `sudo ./desktopify -de ubuntu-mate`
 
