@@ -37,7 +37,7 @@ EOM
 }
 
 function configure_network() {
-  message 0 "[+] Will now configure network"
+  message 0 "Will now configure network"
   # Disable cloud-init from managing the network
   echo "network: {config: disabled}" > /etc/cloud/cloud.cfg.d/99-disable-network-config.cfg
 
@@ -193,9 +193,9 @@ case "${DESKTOP_ENVIRONMENT}" in
     shift;;
   *)
     if [ -z "${DESKTOP_ENVIRONMENT}" ]; then
-      message 2 " Please specifiy a desktop environment"
+      message 2 "Please specifiy a desktop environment"
     else
-      message 2 " ${DESKTOP_ENVIRONMENT} is not a valid desktop environment"
+      message 2 "${DESKTOP_ENVIRONMENT} is not a valid desktop environment"
     fi
     usage
     exit 1;;
