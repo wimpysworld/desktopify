@@ -25,7 +25,7 @@ to one of the official Ubuntu desktop flavours.
   * Clone the project
       * `git clone https://github.com/wimpysworld/desktopify.git`
   * Convert the server to a desktop
-    * `sudo ./desktopify -de ubuntu-mate`
+    * `sudo ./desktopify --de ubuntu-mate`
 
 ### Usage
 
