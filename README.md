@@ -50,12 +50,12 @@ wizard on the next boot.
 ## TODO
 
 - [ ] Create a snap
-- [ ] Install gpio tools
 - [ ] Emoji status
 - [ ] Enable boot splash
 
 ## DONE
 
+- [x] Install GPIO utilities and libraries
 - [x] Enable Bluetooth
 - [x] Make sure it's Ubuntu on a Pi
 - [x] Make Network Manager the default backend
