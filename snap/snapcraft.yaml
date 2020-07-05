@@ -13,6 +13,10 @@ parts:
   desktopify:
     plugin: dump
     source: .
+    prime:
+    - -.github
+    - -LICENSE
+    - README.md
 
 apps:
   desktopify:
