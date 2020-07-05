@@ -49,10 +49,6 @@ wizard on the next boot.
 
 ## TODO
 
-- [ ] Disable overscan
-- [ ] Enable fkms driver
-- [ ] Enable boot splash
-- [ ] Enable Firefox hardware acceleration
 - [ ] Create a snap
 - [ ] Emoji status
 
@@ -63,6 +59,10 @@ wizard on the next boot.
 - [x] Make sure it's Ubuntu on a Pi
 - [x] Make Network Manager the default backend
 - [x] Prevent low power WiFi mode
+- [x] Disable overscan
+- [x] Enable fkms driver
+- [x] Enable boot splash
+- [x] Enable Firefox hardware acceleration
 - [x] Kubuntu
 - [x] Lubuntu
 - [x] Ubuntu
