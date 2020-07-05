@@ -37,7 +37,7 @@ EOM
 }
 
 function configure_network() {
-  echo "[+] Will now configure network"
+  message 0 "Will now configure network"
   # Disable cloud-init from managing the network
   echo "network: {config: disabled}" > /etc/cloud/cloud.cfg.d/99-disable-network-config.cfg
 
@@ -98,6 +98,31 @@ function enable_oem() {
   fi
 }
 
+function message() {
+  # $1 = type , $2 = message
+  # Message types
+  # 0 - info
+  # 1 - warning
+  # 2 - error
+
+  local RED="\e[31m"
+  local GREEN="\e[32m"
+  local YELLOW="\e[33m"
+  local RESET="\e[0m"
+  local MESSAGE_TYPE=""
+  local MESSAGE=""
+  MESSAGE_TYPE=$1
+  MESSAGE=$2
+  
+  if [[ ${MESSAGE_TYPE} -eq 0 ]]; then
+    echo -e "  [${GREEN}+${RESET}] INFO: ${MESSAGE}"
+  elif [[ ${MESSAGE_TYPE} -eq 1 ]]; then
+    echo -e "  [${YELLOW}*${RESET}] WARNING: ${MESSAGE}"
+  elif [[ ${MESSAGE_TYPE} -eq 2 ]]; then
+    echo -e "  [${RED}!${RESET}] ERROR: ${MESSAGE}"
+  fi
+}
+
 CLASSIC_SNAPS=()
 CONFINED_SNAPS=()
 DESKTOP_ENVIRONMENT=""
@@ -122,7 +147,7 @@ while [ $# -gt 0 ]; do
       ENABLE_OEM=1
       shift;;
     *)
-      echo "[!] ERROR: \"${1}\" is not a supported parameter."
+      message 2 "\"${1}\" is not a supported parameter."
       echo "${DESKTOP_ENVIRONMENT}"
       usage
       exit 1;;
@@ -132,45 +157,45 @@ done
 # Set variables based on chosen desktop environment
 case "${DESKTOP_ENVIRONMENT}" in
   ubuntu)
-    echo "specified ubuntu desktop"
+    message 0 "Specified ubuntu desktop"
     DESKTOP_PACKAGES="ubuntu-desktop"
     CONFINED_SNAPS=(gnome-3-34-1804 gtk-common-themes snap-store)
     shift;;
   ubuntu-mate)
-    echo "[+] Specified Ubuntu MATE desktop"
+    message 0 "Specified Ubuntu MATE desktop"
     DESKTOP_PACKAGES="ubuntu-mate-desktop"
     CLASSIC_SNAPS=(ubuntu-mate-welcome software-boutique)
     shift;;
   ubuntu-budgie)
-    echo "[+] Specified Ubuntu Budgie desktop"
+    message 0 "Specified Ubuntu Budgie desktop"
     DESKTOP_PACKAGES="ubuntu-budgie-desktop"
     CLASSIC_SNAPS=(ubuntu-budgie-welcome)
     shift;;
   ubuntu-kylin)
-    echo "[+] Specified Ubunty Kylin desktop"
+    message 0 "Specified Ubunty Kylin desktop"
     DESKTOP_PACKAGES="ubuntukylin-desktop"
     shift;;
   ubuntu-studio)
-    echo "[+] Specified Ubuntu Studio desktop"
+    message 0 "Specified Ubuntu Studio desktop"
     DESKTOP_PACKAGES="ubuntustudio-desktop"
     shift;;
   kubuntu)
-    echo "[+] Specified Kubuntu desktop"
+    message 0 "Specified Kubuntu desktop"
     DESKTOP_PACKAGES="kubuntu-desktop"
     shift;;
   lubuntu)
-    echo "[+] Specified Lubuntu desktop"
+    message 0 "Specified Lubuntu desktop"
     DESKTOP_PACKAGES="lubuntu-desktop"
     shift;;
   xubuntu)
-    echo "[+] Specified Xubuntu desktop"
+    message 0 "Specified Xubuntu desktop"
     DESKTOP_PACKAGES="xubuntu-desktop"
     shift;;
   *)
     if [ -z "${DESKTOP_ENVIRONMENT}" ]; then
-      echo "[!] ERROR: Please specifiy a desktop environment"
+      message 2 "Please specifiy a desktop environment"
     else
-      echo "[!] ERROR: ${DESKTOP_ENVIRONMENT} is not a valid desktop environment"
+      message 2 "${DESKTOP_ENVIRONMENT} is not a valid desktop environment"
     fi
     usage
     exit 1;;
@@ -178,42 +203,42 @@ esac
 
 # Check if the user running the script is root
 if [ "$(id -u)" -ne 0 ]; then
-  echo "[!] ERROR: You need to be root."
+  message 2 "You need to be root."
   exit 1
 fi
 
 HOST_ARCH=$(uname -m)
 if [ "${HOST_ARCH}" != "armv7l" ] && [ "${HOST_ARCH}" != "aarch64" ]; then
-  echo "[!] This script is only intended to run on ARM devices."
+  message 2 "This script is only intended to run on ARM devices."
   exit 1
 fi
 
 # Check if we're running on a Raspberry Pi
 PI_MODEL=$(grep ^Model /proc/cpuinfo  | cut -d':' -f2- | sed 's/ R/R/')
 if [[ "${PI_MODEL}" == *"Raspberry Pi"* ]]; then
-  echo "[+] Configuring your ${PI_MODEL}"
+  message 0 "Configuring your ${PI_MODEL}"
 else
-  echo "[!] This is not a Raspberry Pi. Quitting!"
+  message 2 "This is not a Raspberry Pi. Quitting!"
   exit 1
 fi
 
 # Check if we're running Ubuntu
 IS_UBUNTU=$(lsb_release -is)
 if [ "${IS_UBUNTU}" != "Ubuntu" ]; then
-  echo "[!] This script is only intended to run on Ubuntu."
+  message 2 "This script is only intended to run on Ubuntu."
   exit 1
 fi
 
 # Check if we're running 20.04
 CODENAME=$(lsb_release -cs)
 if [ "${CODENAME}" != "focal" ]; then
-  echo "[!] This script is only intended to run on Ubuntu 20.04."
+  message 2 " This script is only intended to run on Ubuntu 20.04."
   exit 1
 fi
 
 # Do the installation
 HARDWARE_PACKAGES="pi-bluetooth libgpiod-dev python3-libgpiod python3-gpiozero"
-echo "[+] Will now install ${DESKTOP_PACKAGES} and ${HARDWARE_PACKAGES}"
+message 0 "Will now install ${DESKTOP_PACKAGES} and ${HARDWARE_PACKAGES}"
 
 #Check if system already has a desktop installed
 #if [ "$(apt list --installed "${DESKTOP_PACKAGES}" 2>/dev/null)" ] && [ "${FORCE}" -eq 0 ]; then
