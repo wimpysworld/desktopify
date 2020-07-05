@@ -49,9 +49,12 @@ wizard on the next boot.
 
 ## TODO
 
+- [ ] Disable overscan
+- [ ] Enable fkms driver
+- [ ] Enable boot splash
+- [ ] Enable Firefox hardware acceleration
 - [ ] Create a snap
 - [ ] Emoji status
-- [ ] Enable boot splash
 
 ## DONE
 
@@ -73,3 +76,4 @@ wizard on the next boot.
 - [x] Enable initial setup
 - [x] Prevent pointless re-installs
 - [x] Install snaps
+- [x] Install gpio tools
