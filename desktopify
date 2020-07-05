@@ -34,6 +34,32 @@ windowmanager='marco-no-composite'
 EOM
     glib-compile-schemas /usr/share/glib-2.0/schemas/
   fi
+
+  cat <<EOM > "/boot/firmware/usercfg.txt"
+# Place "config.txt" changes (dtparam, dtoverlay, disable_overscan, etc.) in
+# this file. Please refer to the README file for a description of the various
+# configuration files on the boot partition.
+#
+disable_overscan=1
+dtoverlay=vc4-fkms-v3d
+gpu_mem=128
+hdmi_drive=2
+EOM
+
+  echo "net.ifnames=0 dwc_otg.lpm_enable=0 console=serial0,115200 console=tty1 root=LABEL=writable rootfstype=ext4 elevator=deadline rootwait fixrtc quiet splash plymouth.ignore-serial-consoles" > "/boot/firmware/cmdline.txt"
+
+  # Enable hardware acceleration in Firefox.
+  # Append to Ubuntu MATEs existing Firefox default overrides or create and override for the other flavours
+  if [ -e /usr/lib/firefox/defaults/pref/all-ubuntumate.js ] && [ -e /usr/lib/firefox/ubuntumate.cfg ]; then
+    echo "[+] Optimising Firefox for Ubuntu MATE"
+    echo 'defaultPref("layers.acceleration.force-enabled", true);' >> /usr/lib/firefox/ubuntumate.cfg
+  else
+    echo "[+] Optimising Firefox"
+    mkdir -p /usr/lib/firefox/defaults/pref/ 2>/dev/null
+    echo 'pref("general.config.obscure_value", 0);' > /usr/lib/firefox/defaults/pref/all-ubuntupi.js
+    echo 'pref("general.config.filename", "ubuntupi.cfg");' >> /usr/lib/firefox/defaults/pref/all-ubuntupi.js
+    echo 'defaultPref("layers.acceleration.force-enabled", true);' >> /usr/lib/firefox/ubuntupi.cfg
+  fi
 }
 
 function configure_network() {
