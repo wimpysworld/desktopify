@@ -49,7 +49,6 @@ wizard on the next boot.
 
 ## TODO
 
-- [ ] Create a snap
 - [ ] Emoji status
 
 ## DONE
@@ -63,6 +62,7 @@ wizard on the next boot.
 - [x] Enable fkms driver
 - [x] Enable boot splash
 - [x] Enable Firefox hardware acceleration
+- [x] Create a snap
 - [x] Kubuntu
 - [x] Lubuntu
 - [x] Ubuntu
