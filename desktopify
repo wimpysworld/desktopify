@@ -241,11 +241,12 @@ fi
 HARDWARE_PACKAGES="libgles1 libopengl0 libxvmc1 pi-bluetooth libgpiod-dev python3-libgpiod python3-gpiozero"
 
 #Check if system already has a desktop installed
-#if [ "$(apt list --installed "${DESKTOP_PACKAGES}" 2>/dev/null)" ] && [ "${FORCE}" -eq 0 ]; then
-#  echo "[*] WARNING: ${DESKTOP_PACKAGES} already installed. To force install use -force or --force flags."
-#else
-  apt install -y "${DESKTOP_PACKAGES}^"
-#fi
+if [ "$(env LANG=C apt list --installed ${DESKTOP_PACKAGES} 2>/dev/null | grep installed)" ] && [ "${FORCE}" -eq 0 ]; then
+  echo "[*] WARNING: ${DESKTOP_PACKAGES} already installed. To force install use the --force option."
+else
+  echo "[+] Will now install ${DESKTOP_PACKAGES}"
+  apt install -y ${DESKTOP_PACKAGES}^
+fi
 
 for CLASSIC_SNAP in "${CLASSIC_SNAPS[@]}"; do
   snap install "${CLASSIC_SNAP}" --classic
