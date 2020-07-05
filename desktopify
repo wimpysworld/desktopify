@@ -16,6 +16,13 @@ function usage () {
   echo "  ubuntu-studio"
   echo "  xubuntu"
   echo
+  echo "If using the following desktop environments:"
+  echo "  lubuntu"
+  # FIXME: look through the lists of flavours that have text/logo splashes
+  echo "These desktop environments have two boot splashes. Please use --splash"
+  echo "  text"
+  echo "  logo"
+  echo
   echo "You can also pass the optional --oem optional which will run a setup"
   echo "wizard on the next boot."
 }
@@ -121,6 +128,10 @@ while [ $# -gt 0 ]; do
     -oem|--oem)
       ENABLE_OEM=1
       shift;;
+    -splash | --splash)
+      SPLASH="${3}"
+      shift
+      shift;;
     *)
       echo "[!] ERROR: \"${1}\" is not a supported parameter."
       echo "${DESKTOP_ENVIRONMENT}"
@@ -132,7 +143,7 @@ done
 # Set variables based on chosen desktop environment
 case "${DESKTOP_ENVIRONMENT}" in
   ubuntu)
-    echo "specified ubuntu desktop"
+    echo "[+] Specified Ubuntu desktop"
     DESKTOP_PACKAGES="ubuntu-desktop"
     CONFINED_SNAPS=(gnome-3-34-1804 gtk-common-themes snap-store)
     shift;;
@@ -168,9 +179,9 @@ case "${DESKTOP_ENVIRONMENT}" in
     shift;;
   *)
     if [ -z "${DESKTOP_ENVIRONMENT}" ]; then
-      echo "[!] ERROR: Please specifiy a desktop environment"
+      echo "[!] ERROR: Please specifiy a desktop environment."
     else
-      echo "[!] ERROR: ${DESKTOP_ENVIRONMENT} is not a valid desktop environment"
+      echo "[!] ERROR: ${DESKTOP_ENVIRONMENT} is not a valid desktop environment."
     fi
     usage
     exit 1;;
