@@ -16,6 +16,9 @@ function usage () {
   echo "  ubuntu-studio"
   echo "  xubuntu"
   echo
+  echo "Other available desktop environments that ARE NOT official flavors are"
+  echo "  ubuntu-cinnamon-remix"
+  echo
   echo "You can also pass the optional --oem option which will run a setup"
   echo "wizard on the next boot."
 }
@@ -82,7 +85,7 @@ EOM
 }
 
 function enable_oem() {
-  if [ "${ENABLE_OEM}" -eq 1 ] && [ "${DESKTOP_ENVIRONMENT}" != "lubuntu" ]; then
+  if [ "${ENABLE_OEM}" -eq 1 ] && [ "${DESKTOP_ENVIRONMENT}" != "lubuntu" && "ubuntu-cinnamon-remix" ]; then
     apt -y install whois
     local DATE=""
     DATE=$(date +%m%H%M%S)
@@ -172,6 +175,12 @@ case "${DESKTOP_ENVIRONMENT}" in
     DESKTOP_PACKAGES="ubuntu-budgie-desktop"
     CLASSIC_SNAPS=(ubuntu-budgie-welcome)
     shift;;
+  ubuntu-cinnamon-remix)
+    echo "[+] Specified Ubuntu Cinnamon Remix Desktop"
+    echo "[*] WARNING: This desktop is an UNOFFICIAL REMIX OF UBUNTU. Proceeding normally as anyways."
+    DESKTOP_PACKAGES="ubuntucinnamon-desktop"
+    EXTERNAL_PPAS=(ppa:ubuntucinnamonremix/all)
+    shift;;
   ubuntu-kylin)
     echo "[+] Specified Ubunty Kylin desktop"
     DESKTOP_PACKAGES="ubuntukylin-desktop"
@@ -239,6 +248,11 @@ fi
 
 # Do the installation
 HARDWARE_PACKAGES="libgles1 libopengl0 libxvmc1 pi-bluetooth libgpiod-dev python3-libgpiod python3-gpiozero"
+
+# Add PPA's
+for EXTERNAL_PPA in "${EXTERNAL_PPAS[@]}"; do
+  add-apt-repository "${EXTERNAL_PPA}"
+done
 
 #Check if system already has a desktop installed
 if [ "$(env LANG=C apt list --installed ${DESKTOP_PACKAGES} 2>/dev/null | grep installed)" ] && [ "${FORCE}" -eq 0 ]; then
