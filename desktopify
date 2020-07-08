@@ -20,6 +20,33 @@ function usage () {
   echo "wizard on the next boot."
 }
 
+function fancy_message() {
+    # $1 = type , $2 = message
+    # Message types
+    # info - For information
+    # warn - Somethings not quite right
+    # error - Something went really wrong.
+    if [ -z "${1}" ] || [ -z "${2}" ]; then
+      return
+    fi
+
+    local RED="\e[31m"
+    local GREEN="\e[32m"
+    local YELLOW="\e[33m"
+    local RESET="\e[0m"
+    local MESSAGE_TYPE=""
+    local MESSAGE=""
+    MESSAGE_TYPE="${1}"
+    MESSAGE="${2}"
+    
+    case ${MESSAGE_TYPE} in
+      info) echo -e "  [${GREEN}+${RESET}] INFO: ${MESSAGE}";;
+      warn) echo -e "  [${YELLOW}*${RESET}] WARNING: ${MESSAGE}";;
+      error) echo -e "  [${RED}!${RESET}] ERROR: ${MESSAGE}";;
+      *) echo -e "  [?] UNKNOWN: ${MESSAGE}";;
+    esac
+}
+
 function apply_tweaks() {
   if [ "${DESKTOP_ENVIRONMENT}" == "ubuntu-mate" ]; then
     cat <<EOM > /usr/share/glib-2.0/schemas/50_ubuntu-mate-raspi-tweaks.gschema.override
@@ -51,10 +78,10 @@ EOM
   # Enable hardware acceleration in Firefox.
   # Append to Ubuntu MATEs existing Firefox default overrides or create and override for the other flavours
   if [ -e /usr/lib/firefox/defaults/pref/all-ubuntumate.js ] && [ -e /usr/lib/firefox/ubuntumate.cfg ]; then
-    echo "[+] Optimising Firefox for Ubuntu MATE"
+    fancy_message info "Optimising Firefox for Ubuntu MATE"
     echo 'defaultPref("layers.acceleration.force-enabled", true);' >> /usr/lib/firefox/ubuntumate.cfg
   else
-    echo "[+] Optimising Firefox"
+    fancy_message info "Optimising Firefox"
     mkdir -p /usr/lib/firefox/defaults/pref/ 2>/dev/null
     echo 'pref("general.config.obscure_value", 0);' > /usr/lib/firefox/defaults/pref/all-ubuntupi.js
     echo 'pref("general.config.filename", "ubuntupi.cfg");' >> /usr/lib/firefox/defaults/pref/all-ubuntupi.js
@@ -63,7 +90,7 @@ EOM
 }
 
 function configure_network() {
-  echo "[+] Will now configure network"
+  fancy_message info "Will now configure network"
   # Disable cloud-init from managing the network
   echo "network: {config: disabled}" > /etc/cloud/cloud.cfg.d/99-disable-network-config.cfg
 
@@ -156,8 +183,8 @@ while [ $# -gt 0 ]; do
       ENABLE_OEM=1
       shift;;
     *)
-      echo "[!] ERROR: \"${1}\" is not a supported parameter."
-      echo "${DESKTOP_ENVIRONMENT}"
+      fancy_message error "\"${1}\" is not a supported parameter."
+      fancy_message info "${DESKTOP_ENVIRONMENT}"
       usage
       exit 1;;
   esac
@@ -166,45 +193,45 @@ done
 # Set variables based on chosen desktop environment
 case "${DESKTOP_ENVIRONMENT}" in
   ubuntu)
-    echo "specified ubuntu desktop"
+    fancy_message info "specified ubuntu desktop"
     DESKTOP_PACKAGES="ubuntu-desktop"
     CONFINED_SNAPS=(gnome-3-34-1804 gtk-common-themes snap-store)
     shift;;
   ubuntu-mate)
-    echo "[+] Specified Ubuntu MATE desktop"
+    fancy_message info "Specified Ubuntu MATE desktop"
     DESKTOP_PACKAGES="ubuntu-mate-desktop"
     CLASSIC_SNAPS=(ubuntu-mate-welcome software-boutique)
     shift;;
   ubuntu-budgie)
-    echo "[+] Specified Ubuntu Budgie desktop"
+    fancy_message info "Specified Ubuntu Budgie desktop"
     DESKTOP_PACKAGES="ubuntu-budgie-desktop"
     CLASSIC_SNAPS=(ubuntu-budgie-welcome)
     shift;;
   ubuntu-kylin)
-    echo "[+] Specified Ubunty Kylin desktop"
+    fancy_message info "Specified Ubunty Kylin desktop"
     DESKTOP_PACKAGES="ubuntukylin-desktop"
     shift;;
   ubuntu-studio)
-    echo "[+] Specified Ubuntu Studio desktop"
+    fancy_message info "Specified Ubuntu Studio desktop"
     DESKTOP_PACKAGES="ubuntustudio-desktop"
     shift;;
   kubuntu)
-    echo "[+] Specified Kubuntu desktop"
+    fancy_message info "Specified Kubuntu desktop"
     DESKTOP_PACKAGES="kubuntu-desktop"
     shift;;
   lubuntu)
-    echo "[+] Specified Lubuntu desktop"
+    fancy_message info "Specified Lubuntu desktop"
     DESKTOP_PACKAGES="lubuntu-desktop"
     shift;;
   xubuntu)
-    echo "[+] Specified Xubuntu desktop"
+    fancy_message info "Specified Xubuntu desktop"
     DESKTOP_PACKAGES="xubuntu-desktop"
     shift;;
   *)
     if [ -z "${DESKTOP_ENVIRONMENT}" ]; then
-      echo "[!] ERROR: Please specifiy a desktop environment"
+      fancy_message error "Please specifiy a desktop environment"
     else
-      echo "[!] ERROR: ${DESKTOP_ENVIRONMENT} is not a valid desktop environment"
+      fancy_message error "${DESKTOP_ENVIRONMENT} is not a valid desktop environment"
     fi
     usage
     exit 1;;
@@ -212,36 +239,36 @@ esac
 
 # Check if the user running the script is root
 if [ "$(id -u)" -ne 0 ]; then
-  echo "[!] ERROR: You need to be root."
+  fancy_message error "You need to be root."
   exit 1
 fi
 
 HOST_ARCH=$(uname -m)
 if [ "${HOST_ARCH}" != "armv7l" ] && [ "${HOST_ARCH}" != "aarch64" ]; then
-  echo "[!] This script is only intended to run on ARM devices."
+  fancy_message error "This script is only intended to run on ARM devices."
   exit 1
 fi
 
 # Check if we're running on a Raspberry Pi
 PI_MODEL=$(grep ^Model /proc/cpuinfo  | cut -d':' -f2- | sed 's/ R/R/')
 if [[ "${PI_MODEL}" == *"Raspberry Pi"* ]]; then
-  echo "[+] Configuring your ${PI_MODEL}"
+  fancy_message info "Configuring your ${PI_MODEL}"
 else
-  echo "[!] This is not a Raspberry Pi. Quitting!"
+  fancy_message error "This is not a Raspberry Pi. Quitting!"
   exit 1
 fi
 
 # Check if we're running Ubuntu
 IS_UBUNTU=$(lsb_release -is)
 if [ "${IS_UBUNTU}" != "Ubuntu" ]; then
-  echo "[!] This script is only intended to run on Ubuntu."
+  fancy_message error "This script is only intended to run on Ubuntu."
   exit 1
 fi
 
 # Check if we're running 20.04
 CODENAME=$(lsb_release -cs)
 if [ "${CODENAME}" != "focal" ]; then
-  echo "[!] This script is only intended to run on Ubuntu 20.04."
+  fancy_message error "This script is only intended to run on Ubuntu 20.04."
   exit 1
 fi
 
@@ -250,9 +277,9 @@ HARDWARE_PACKAGES="libgles1 libopengl0 libxvmc1 pi-bluetooth libgpiod-dev python
 
 #Check if system already has a desktop installed
 if [ "$(env LANG=C apt list --installed ${DESKTOP_PACKAGES} 2>/dev/null | grep installed)" ] && [ "${FORCE}" -eq 0 ]; then
-  echo "[*] WARNING: ${DESKTOP_PACKAGES} already installed. To force install use the --force option."
+  fancy_message warn "${DESKTOP_PACKAGES} already installed. To force install use the --force option."
 else
-  echo "[+] Will now install ${DESKTOP_PACKAGES}"
+  fancy_message info "Will now install ${DESKTOP_PACKAGES}"
   apt install -y ${DESKTOP_PACKAGES}^
 fi
 
@@ -264,7 +291,7 @@ for CONFINED_SNAP in "${CONFINED_SNAPS[@]}"; do
   snap install "${CONFINED_SNAP}"
 done
 
-echo "[+] Will now install ${HARDWARE_PACKAGES}"
+fancy_message info "Will now install ${HARDWARE_PACKAGES}"
 apt install -y ${HARDWARE_PACKAGES}
 
 configure_network
