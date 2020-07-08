@@ -4,7 +4,7 @@
 function usage () {
   echo
   echo "Usage"
-  echo "  $0 --de <desktop environment>"
+  echo "  $0 --de <desktop environment> --gpu <megabytes>"
   echo
   echo "Available desktop environments are"
   echo "  lubuntu"
@@ -42,7 +42,7 @@ EOM
 #
 disable_overscan=1
 dtoverlay=vc4-fkms-v3d
-gpu_mem=128
+gpu_mem=${GPU_MEM}
 hdmi_drive=2
 EOM
 
@@ -129,12 +129,20 @@ CONFINED_SNAPS=()
 DESKTOP_ENVIRONMENT=""
 ENABLE_OEM=0
 FORCE=0
+GPU_MEM=128
 
 # Take command line arguments
 while [ $# -gt 0 ]; do
   case "${1}" in
     -de|--de)
       DESKTOP_ENVIRONMENT="${2}"
+      shift
+      shift;;
+    -gpu|--gpu)
+      GPU_MEM="${2}"
+      if [ $GPU_MEM -gt 768 ]; then
+        GPU_MEM=768
+      fi
       shift
       shift;;
     -force|--force)
