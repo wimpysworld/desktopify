@@ -40,9 +40,9 @@ function fancy_message() {
     MESSAGE="${2}"
     
     case ${MESSAGE_TYPE} in
-      info) echo -e "  [${GREEN}+${RESET}] INFO: ${MESSAGE}";;
-      warn) echo -e "  [${YELLOW}*${RESET}] WARNING: ${MESSAGE}";;
-      error) echo -e "  [${RED}!${RESET}] ERROR: ${MESSAGE}";;
+      info) echo -e "  [\U0001f600] INFO: ${MESSAGE}";;
+      warn) echo -e "  [\U0001f615] WARNING: ${MESSAGE}";;
+      error) echo -e "  [\U0001f480] ERROR: ${MESSAGE}";;
       *) echo -e "  [?] UNKNOWN: ${MESSAGE}";;
     esac
 }
