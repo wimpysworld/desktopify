@@ -158,7 +158,7 @@ done
 # Set variables based on chosen desktop environment
 case "${DESKTOP_ENVIRONMENT}" in
   ubuntu)
-    echo "specified ubuntu desktop"
+    echo "[+] Specified Ubuntu desktop"
     DESKTOP_PACKAGES="ubuntu-desktop"
     CONFINED_SNAPS=(gnome-3-34-1804 gtk-common-themes snap-store)
     shift;;
