@@ -238,10 +238,10 @@ if [ "${CODENAME}" != "focal" ]; then
 fi
 
 # Do the installation
-HARDWARE_PACKAGES="libgles1 libopengl0 libxvmc1 pi-bluetooth libgpiod-dev python3-libgpiod python3-gpiozero"
+HARDWARE_PACKAGES=(libgles1 libopengl0 libxvmc1 pi-bluetooth libgpiod-dev python3-libgpiod python3-gpiozero)
 
 #Check if system already has a desktop installed
-if [ "$(env LANG=C apt list --installed ${DESKTOP_PACKAGES} 2>/dev/null | grep installed)" ] && [ "${FORCE}" -eq 0 ]; then
+if { env LANG=C apt list --installed "${DESKTOP_PACKAGES}" 2>/dev/null | grep -q installed; } && [ "${FORCE}" -eq 0 ]; then
   echo "[*] WARNING: ${DESKTOP_PACKAGES} already installed. To force install use the --force option."
 else
   echo "[+] Will now install ${DESKTOP_PACKAGES}"
@@ -256,8 +256,8 @@ for CONFINED_SNAP in "${CONFINED_SNAPS[@]}"; do
   snap install "${CONFINED_SNAP}"
 done
 
-echo "[+] Will now install ${HARDWARE_PACKAGES}"
-apt install -y ${HARDWARE_PACKAGES}
+echo "[+] Will now install ${HARDWARE_PACKAGES[*]}"
+apt install -y "${HARDWARE_PACKAGES[@]}"
 
 configure_network
 apply_tweaks
