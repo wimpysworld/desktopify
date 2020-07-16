@@ -1,0 +1,223 @@
+#!/bin/bash
+
+# Wrapper for desktopify Misko_2083
+# Menu code adapted from https://askubuntu.com/questions/1705/how-can-i-create-a-select-menu-in-a-shell-script
+# Run from the same dir as desktopify
+
+
+      E='echo -e';e='echo -en';trap "R;exit" 2
+    ESC=$( $e "\e")
+   TPUT(){ $e "\e[${1};${2}H" ;}
+  CLEAR(){ $e "\ec";}
+  CIVIS(){ $e "\e[?25l";}
+   MARK(){ $e "\e[7m";}
+ UNMARK(){ $e "\e[27m";}
+cursor_blink_on()   { printf "$ESC[?25h"; }
+cursor_blink_off()  { printf "$ESC[?25l"; }
+      R(){ CLEAR ;stty sane;CLEAR;};
+   HEAD(){ for each in $(seq 1 15);do
+           $E "   \xE2\x94\x82                                          \xE2\x94\x82"
+           done
+           MARK;TPUT 1 5
+           $E "              DESKTOPIFY                  " ;UNMARK;
+           TPUT 2 5
+           $E "      SELECT A DESKTOP ENVIRONMENT        " ;}
+HEAD_II(){ for each in $(seq 1 15);do
+           $E "   \xE2\x94\x82                                          \xE2\x94\x82"
+           done
+           MARK;TPUT 1 5
+           $E "              DESKTOPIFY                  " ;UNMARK;
+           TPUT 2 5
+           $E "        SELECT ADDITIONAL OPTIONS         " ;
+           TPUT 4 10
+           $E "  Desktop Environment $1" ;}
+           i=0; CLEAR; CIVIS;
+   FOOT(){ MARK;TPUT 15 5
+           $E " UP \xE2\x86\x91 \xE2\x86\x93 DOWN \xE2\x94\x82 \xe2\x86\xb5 ENTER - NEXT \xE2\x94\x82 EXIT - X  ";UNMARK;}
+FOOT_II(){ MARK;TPUT 14 5
+           $E "     \xe2\x86\x90  BACK \xE2\x94\x82 SPACE - SELECT \xE2\x94\x82           ";
+           TPUT 15 5
+           $E " UP \xE2\x86\x91 \xE2\x86\x93 DOWN \xE2\x94\x82 \xe2\x86\xb5 ENTER - NEXT \xE2\x94\x82 EXIT - X  ";UNMARK;}
+  ARROW(){ IFS= read -s -n1 key 2>/dev/null >&2
+           if [[ $key = $ESC ]];then 
+              read -s -n2 key 2>/dev/null >&2;
+              if [[ $key = \[A ]]; then echo up;fi
+              if [[ $key = \[B ]]; then echo dn;fi
+           fi
+           if [[  $key  = [xX]   ]]; then echo exit;fi;
+           if [[ "$key" = ""     ]];then echo enter;fi;}
+     M0(){ TPUT  4 20; $e "Lubuntu";}
+     M1(){ TPUT  5 20; $e "Kubuntu";}
+     M2(){ TPUT  6 20; $e "Ubuntu";}
+     M3(){ TPUT  7 20; $e "Ubuntu-Budgie";}
+     M4(){ TPUT  8 20; $e "Ubuntu-Kylin";}
+     M5(){ TPUT  9 20; $e "Ubuntu-Mate";}
+     M6(){ TPUT 10 20; $e "Ubuntu-Studio";}
+     M7(){ TPUT 11 20; $e "Xubuntu";}
+     M8(){ TPUT 12 20; $e "EXIT   ";}
+      LM=8
+   MENU(){ for each in $(seq 0 $LM);do M${each};done;}
+    POS(){ if [[ $cur == up ]];then ((i--));fi
+           if [[ $cur == dn ]];then ((i++));fi
+           if [[ $i -lt 0   ]];then i=$LM;fi
+           if [[ $i -gt $LM ]];then i=0;fi;}
+REFRESH(){ after=$((i+1)); before=$((i-1))
+           if [[ $before -lt 0  ]];then before=$LM;fi
+           if [[ $after -gt $LM ]];then after=0;fi
+           if [[ $j -lt $i      ]];then UNMARK;M$before;else UNMARK;M$after;fi
+           if [[ $after -eq 0 ]] || [ $before -eq $LM ];then
+           UNMARK; M$before; M$after;fi;j=$i;UNMARK;M$before;M$after;}
+   INIT(){ R;HEAD;FOOT;MENU;}
+     SC(){ REFRESH;MARK;$S;$b;cur=`ARROW`;}
+     ES(){ INIT;};INIT
+    MSEL() { cursor_blink_on()   { printf "$ESC[?25h"; }
+             cursor_blink_off()  { printf "$ESC[?25l"; }
+             cursor_to()         { printf "$ESC[$1;${2:-1}H"; }
+             print_inactive()    { printf "$2  $1 "; }
+             print_active()      { printf "$2  $ESC[7m$1 $ESC[27m"; }
+             get_cursor_row()    { IFS=';' read -sdR -p $'\E[6n' ROW COL; echo ${ROW#*[}; }
+             key_input()         {
+             local key
+             IFS= read -rsn1 key 2>/dev/null >&2
+             if [[ $key = ""      ]]; then echo enter; fi;
+             if [[ $key = [xX]    ]]; then echo exit;  fi;
+             if [[ $key = $'\x20' ]]; then echo space; fi;
+             if [[ $key = $'\x1b' ]]; then
+               read -rsn2 key
+               if [[ $key = [A ]]; then echo up;    fi;
+               if [[ $key = [B ]]; then echo down;  fi;
+               if [[ $key = [D ]]; then echo back;  fi;
+             fi;}
+             toggle_option()    {
+               local arr_name=$1
+               eval "local arr=(\"\${${arr_name}[@]}\")"
+               local option=$2
+               if [[ ${arr[option]} == true ]]; then
+                 arr[option]=
+               else
+                 arr[option]=true
+               fi
+               eval $arr_name='("${arr[@]}")';}
+
+            local retval=$1
+            local options
+            local defaults
+
+            IFS=';' read -r -a options <<< "$2"
+            if [[ -z $3 ]]; then
+              defaults=()
+            else
+              IFS=';' read -r -a defaults <<< "$3"
+            fi
+            local selected=()
+
+           for ((i=0; i<${#options[@]}; i++)); do
+             selected+=("${defaults[i]}")
+             printf "\n"
+           done
+
+           # determine current screen position for overwriting the options
+           local lastrow=`get_cursor_row`
+           local startrow=$(($lastrow - ${#options[@]}))
+
+           # ensure cursor and input echoing back on upon a ctrl+c during read -s
+           trap "cursor_blink_on; stty echo; printf '\n'; exit" 2
+           cursor_blink_off
+           local active=0
+           while true; do
+             # print options by overwriting the last lines
+             local idx=0
+             for option in "${options[@]}"; do
+               local prefix="[ ]"
+               if [[ ${selected[idx]} == true ]]; then
+                 prefix="[x]"
+               fi
+
+               cursor_to $(($startrow + $idx))
+               if [ $idx -eq $active ]; then
+                 if [ $option == OEM ]; then
+                    TPUT  $((idx+6)) 6
+                    print_active "$option" "$prefix"
+                    TPUT $((idx+7)) 11
+                    $e "Run a setup wizard on the next boot"
+                 elif [ $option == FORCE ]; then
+                    TPUT  $((idx+8)) 6
+                    print_active "$option" "$prefix"
+                    TPUT $((idx+9)) 11
+                    $e "Force desktop package install"
+                 fi
+               else
+                 if [ $option == OEM ]; then
+                    TPUT  $((idx+6)) 6
+                    print_inactive "$option" "$prefix"
+                    TPUT $((idx+7)) 11
+                    $e "Run a setup wizard on the next boot"
+                 elif [ $option == FORCE ]; then
+                    TPUT  $((idx+8)) 6
+                    print_inactive "$option" "$prefix"
+                    TPUT $((idx+9)) 11
+                    $e "Force desktop package install"
+                 fi
+               fi
+               ((idx++))
+             done
+
+            # user key control
+            case `key_input` in
+              space)  toggle_option selected $active;;
+              enter)  break;;
+                 up)  ((active--));
+                      if [ $active -lt 0 ]; then active=$((${#options[@]} - 1)); fi;;
+               down)  ((active++));
+                      if [ $active -ge ${#options[@]} ]; then active=0; fi;;
+               back)  CLEAR; exec $0;;
+               exit)  CLEAR;exit 0;;
+            esac
+           done
+
+           # cursor position back to normal
+           cursor_to $lastrow
+           printf "\n"
+           cursor_blink_on
+           eval $retval='("${selected[@]}")'
+       }
+
+  RUN(){
+         if [[ $cur != back ]];then 
+          R;HEAD_II "$1"
+          FOOT_II;
+           
+          MSEL result "OEM;FORCE" "false;;false"
+          CLEAR
+          ARG=
+          if [[ ${result[0]} == true ]]; then
+            ARG="--oem"
+          fi
+          if [[ ${result[1]} == true ]]; then
+            ARG="$ARG --force"
+          fi
+
+          $E "sudo desktopify $ARG --de $1"
+          sudo ./desktopify --de $1 $ARG
+
+          break
+         fi
+       }
+
+  # ensure cursor and input echoing back on upon a ctrl+c during read -s
+  trap "cursor_blink_on; stty echo; printf '\n'; exit" 2
+  cursor_blink_off
+  while [[ "$O" != " " ]] && [[ $cur != exit ]]; do case $i in
+        0) S=M0;SC;if [[ $cur == enter ]];then RUN lubuntu; fi;;
+        1) S=M1;SC;if [[ $cur == enter ]];then RUN kubuntu; fi;;
+        2) S=M2;SC;if [[ $cur == enter ]];then RUN ubuntu; fi;;
+        3) S=M3;SC;if [[ $cur == enter ]];then RUN ubuntu-budgie; fi;;
+        4) S=M4;SC;if [[ $cur == enter ]];then RUN ubuntu-kylin; fi;;
+        5) S=M5;SC;if [[ $cur == enter ]];then RUN ubuntu-mate; fi;;
+        6) S=M6;SC;if [[ $cur == enter ]];then RUN ubuntu-studio; fi;;
+        7) S=M7;SC;if [[ $cur == enter ]];then RUN xubuntu; fi;;
+        8) S=M8;SC;if [[ $cur == enter ]];then R;exit 0;fi;;
+ esac;POS;done
+
+ CLEAR
+ cursor_blink_on
