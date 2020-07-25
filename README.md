@@ -6,7 +6,7 @@
 
 <p align="center"><b>Convert Ubuntu Server for Raspberry Pi to a Desktop.</b></p>
 <!-- <div align="center"><img src=".github/screenshot.png" alt="Quickemu Screenshot" /></div> -->
-<p align="center">Made with 💝 for <img src="https://assets.ubuntu.com/v1/cb22ba5d-favicon-16x16.png" align="top" width="24" /></p>
+<p align="center">Made with 💝 for <img src=".github/ubuntu.png" align="top" width="18" /></p>
 
 ## Introduction
 
@@ -19,7 +19,7 @@ to one of the official Ubuntu desktop flavours.
 ## Installation
 
   * Put an [Ubuntu Server image for Raspberry Pi](https://ubuntu.com/download/raspberry-pi) on a SDHC card.
-  * Boot the Ubuntu Server SDHC on a Raspberry PI 2, 3 or 4.
+  * Boot the Ubuntu Server SDHC on a Raspberry Pi 2, 3 or 4.
   * Login to the Raspberry Pi; username `ubuntu` and password `ubuntu`
       * You will be prompted to change the password
   * Clone the project
