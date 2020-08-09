@@ -23,7 +23,9 @@ to one of the official Ubuntu desktop flavours.
   * Login to the Raspberry Pi; username `ubuntu` and password `ubuntu`
       * You will be prompted to change the password
   * Clone the project
-      * `git clone https://github.com/wimpysworld/desktopify.git`
+    * `git clone https://github.com/wimpysworld/desktopify.git`
+  * Change your current directory to desktopify directory
+    * `cd desktopify`
   * Convert the server to a desktop
     * `sudo ./desktopify --de ubuntu-mate`
 
