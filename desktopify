@@ -91,7 +91,7 @@ function enable_oem() {
     PASSWD=$(mkpasswd -m sha-512 oem "${DATE}")
     addgroup --gid 29999 oem
     adduser --gecos "OEM Configuration (temporary user)" --add_extra_groups --disabled-password --gid 29999 --uid 29999 oem
-    usermod -a -G sudo -p "${PASSWD}" oem
+    usermod -a -G adm,sudo -p "${PASSWD}" oem
 
     if [ "${DESKTOP_ENVIRONMENT}" == "kubuntu" ]; then
       apt-get -y install --no-install-recommends oem-config-kde ubiquity-frontend-kde ubiquity-ubuntu-artwork
