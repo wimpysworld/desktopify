@@ -18,7 +18,7 @@ We have a Discord for this project:
 
   * <https://discord.gg/hy7uZfX>
 
-<!-- [![Replace VirtualBox with Bash & QEMU](https://img.youtube.com/vi/AOTYWEgw0hI/0.jpg)](https://www.youtube.com/watch?v=AOTYWEgw0hI) -->
+[![Raspberry Pi 4 8GB - Install Ubuntu Desktop 20.04 LTS](https://img.youtube.com/vi/umtZuUJOU38/0.jpg)](https://www.youtube.com/watch?v=umtZuUJOU38)
 
 ## Installation
 
