@@ -43,7 +43,7 @@ EOM
 #
 disable_overscan=1
 dtoverlay=vc4-fkms-v3d
-dtparam=audio=on
+gpu_mem=128
 hdmi_drive=2
 EOM
 
