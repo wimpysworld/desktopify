@@ -14,6 +14,10 @@ Desktopify is a simple script to convert
 [Ubuntu Server for the Raspberry Pi](https://ubuntu.com/download/raspberry-pi)
 to one of the official Ubuntu desktop flavours.
 
+We have a Discord for this project:
+
+  * <https://discord.gg/hy7uZfX>
+
 <!-- [![Replace VirtualBox with Bash & QEMU](https://img.youtube.com/vi/AOTYWEgw0hI/0.jpg)](https://www.youtube.com/watch?v=AOTYWEgw0hI) -->
 
 ## Installation
