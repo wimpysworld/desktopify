@@ -230,7 +230,7 @@ fi
 HARDWARE_PACKAGES=(libgles1 libopengl0 libxvmc1 pi-bluetooth libgpiod-dev python3-libgpiod python3-gpiozero)
 
 #Check if system already has a desktop installed
-if [ "$(apt list --installed ${DESKTOP_PACKAGES} 2>/dev/null | grep installed)" ] && [ "${FORCE}" -eq 0 ]; then
+if [[ ${FORCE} -eq 0 ]] && { dpkg -l "${DESKTOP_PACKAGES}" &>/dev/null; }; then
   echo "[*] WARNING: ${DESKTOP_PACKAGES} already installed. To force install use the --force option."
 else
   echo "[+] Will now install ${DESKTOP_PACKAGES}"
