@@ -120,29 +120,34 @@ ENABLE_OEM=0
 FORCE=0
 
 # Take command line arguments
-while [ $# -gt 0 ]; do
-  case "${1}" in
-    -de|--de)
-      DESKTOP_ENVIRONMENT="${2}"
-      shift
-      shift;;
-    -force|--force)
-      FORCE=1
-      shift
-      shift;;
-    -h|--h|-help|--help)
-      usage
-      exit 0;;
-    -oem|--oem)
-      ENABLE_OEM=1
-      shift;;
-    *)
-      echo "[!] ERROR: \"${1}\" is not a supported parameter."
-      echo "${DESKTOP_ENVIRONMENT}"
-      usage
-      exit 1;;
-  esac
-done
+if [ $# -lt 1 ]; then
+    usage
+    exit 0
+else
+    while [ $# -gt 0 ]; do
+        case "${1}" in
+          -de|--de)
+            DESKTOP_ENVIRONMENT="${2}"
+            shift
+            shift;;
+          -force|--force)
+            FORCE=1
+            shift
+            shift;;
+          -h|--h|-help|--help)
+            usage
+            exit 0;;
+          -oem|--oem)
+            ENABLE_OEM=1
+            shift;;
+          *)
+            echo "[!] ERROR: \"${1}\" is not a supported parameter."
+            echo "${DESKTOP_ENVIRONMENT}"
+            usage
+            exit 1;;
+        esac
+    done
+fi
 
 # Set variables based on chosen desktop environment
 case "${DESKTOP_ENVIRONMENT}" in
