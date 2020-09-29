@@ -148,6 +148,38 @@ else
     done
 fi
 
+# Sloppy PR
+# Instructions from: https://github.com/wimpysworld/desktopify/issues/54#issuecomment-700817486
+sudo dpkg --add-architecture armhf
+wget -O vnc.deb https://www.realvnc.com/download/file/vnc.files/VNC-Server-6.7.2-Linux-ARM.deb
+mkdir vnc-lib-files
+cd vnc-lib-files
+wget https://github.com/raspberrypi/firmware/raw/master/opt/vc/lib/libbcm_host.so
+wget https://github.com/raspberrypi/firmware/raw/master/opt/vc/lib/libvcos.so
+wget https://github.com/raspberrypi/firmware/raw/master/opt/vc/lib/libmmal.so
+wget https://github.com/raspberrypi/firmware/raw/master/opt/vc/lib/libmmal_core.so
+wget https://github.com/raspberrypi/firmware/raw/master/opt/vc/lib/libmmal_components.so
+wget https://github.com/raspberrypi/firmware/raw/master/opt/vc/lib/libmmal_util.so
+wget https://github.com/raspberrypi/firmware/raw/master/opt/vc/lib/libmmal_vc_client.so
+wget https://github.com/raspberrypi/firmware/raw/master/opt/vc/lib/libchiq_arm.so
+wget https://github.com/raspberrypi/firmware/raw/master/opt/vc/lib/libvcsm.so
+wget https://github.com/raspberrypi/firmware/raw/master/opt/vc/lib/libcontainers.so
+
+sudo mv libbcm_host.so /usr/lib
+sudo mv libvcos.so /usr/lib
+sudo mv libmmal.so /usr/lib
+sudo mv libmmal_core.so /usr/lib
+sudo mv libmmal_components.so /usr/lib
+sudo mv libmmal_util.so /usr/lib
+sudo mv libmmal_vc_client.so /usr/lib
+sudo mv libchiq_arm.so /usr/lib
+sudo mv libvcsm.so /usr/lib
+sudo mv libcontainers.so /usr/lib
+
+sudo apt --fix-broken install ./vnc.deb
+
+rm -rf vnc-lib-files vnc.deb
+
 # Set variables based on chosen desktop environment
 case "${DESKTOP_ENVIRONMENT}" in
   ubuntu)
