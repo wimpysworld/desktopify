@@ -223,10 +223,10 @@ if [ "${IS_UBUNTU}" != "Ubuntu" ]; then
   exit 1
 fi
 
-# Check if we're running 20.04
+# Check if we're running above 20.04
 CODENAME=$(lsb_release -cs)
-if [ "${CODENAME}" != "focal" ]; then
-  echo "[!] This script is only intended to run on Ubuntu 20.04."
+if [[ "${CODENAME}" != "focal" && "${CODENAME}" != "groovy" ]]; then
+  echo "[!] This script is only intended to run on Ubuntu version above 20.04."
   exit 1
 fi
 
