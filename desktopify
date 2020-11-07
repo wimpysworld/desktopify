@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 LC_ALL=C
-
 # Display help usage
 function usage () {
   echo
