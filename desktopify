@@ -43,6 +43,7 @@ EOM
 #
 disable_overscan=1
 dtoverlay=vc4-fkms-v3d
+start_x=1
 hdmi_drive=2
 EOM
 
