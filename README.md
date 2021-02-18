@@ -14,9 +14,7 @@ Desktopify is a simple script to convert
 [Ubuntu Server for the Raspberry Pi](https://ubuntu.com/download/raspberry-pi)
 to one of the official Ubuntu desktop flavours.
 
-We have a Discord for this project:
-
-  * <https://discord.gg/hy7uZfX>
+We have a Discord for this project: [![Discord](https://img.shields.io/discord/712850672223125565?color=0C306A&label=WimpysWorld%20Discord&logo=Discord&logoColor=ffffff&style=flat-square)](https://discord.gg/hy7uZfX)
 
 [![Raspberry Pi 4 8GB - Install Ubuntu Desktop 20.04 LTS](https://img.youtube.com/vi/umtZuUJOU38/0.jpg)](https://www.youtube.com/watch?v=umtZuUJOU38)
 
