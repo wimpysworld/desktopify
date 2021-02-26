@@ -71,7 +71,7 @@ EOM
 
 function enable_oem() {
   if [ "${ENABLE_OEM}" -eq 1 ] && [ "${DESKTOP_ENVIRONMENT}" != "lubuntu" ]; then
-    apt -y install whois
+    apt-get -y install whois
     local DATE=""
     DATE=$(date +%m%H%M%S)
     local PASSWD=""
@@ -234,11 +234,11 @@ fi
 HARDWARE_PACKAGES=(libgles1 libopengl0 libxvmc1 pi-bluetooth libgpiod-dev python3-libgpiod python3-gpiozero)
 
 #Check if system already has a desktop installed
-if [ "$(apt list --installed ${DESKTOP_PACKAGES} 2>/dev/null | grep installed)" ] && [ "${FORCE}" -eq 0 ]; then
+if [[ ${FORCE} -eq 0 ]] && { dpkg -l "${DESKTOP_PACKAGES}" &>/dev/null; }; then
   echo "[*] WARNING: ${DESKTOP_PACKAGES} already installed. To force install use the --force option."
 else
   echo "[+] Will now install ${DESKTOP_PACKAGES}"
-  apt install -y ${DESKTOP_PACKAGES}^
+  apt-get -y install ${DESKTOP_PACKAGES}^
 fi
 
 for CLASSIC_SNAP in "${CLASSIC_SNAPS[@]}"; do
@@ -250,7 +250,7 @@ for CONFINED_SNAP in "${CONFINED_SNAPS[@]}"; do
 done
 
 echo "[+] Will now install ${HARDWARE_PACKAGES[*]}"
-apt install -y "${HARDWARE_PACKAGES[@]}"
+apt-get -y install "${HARDWARE_PACKAGES[@]}"
 
 configure_network
 apply_tweaks
