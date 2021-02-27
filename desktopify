@@ -225,10 +225,15 @@ fi
 
 # Check if we're running 20.04
 CODENAME=$(lsb_release -cs)
-if [ "${CODENAME}" != "focal" ]; then
-  echo "[!] This script is only intended to run on Ubuntu 20.04."
-  exit 1
-fi
+case ${CODENAME} in
+    focal)
+        # Do nothing, as this is a supported release.
+        ;;
+    *)
+        echo "[!] This script is only intended to run on Ubuntu 20.04."
+        exit 1
+        ;;
+esac
 
 # Do the installation
 HARDWARE_PACKAGES=(libgles1 libopengl0 libxvmc1 pi-bluetooth libgpiod-dev python3-libgpiod python3-gpiozero)
