@@ -79,7 +79,7 @@ We have a Discord for this project: [![Discord](https://img.shields.io/discord/7
 ## Installation    
   1. clone this repo by typing following command on ubuntu server    
   ``` 
-  git clone https://github.com/ab31mohit/desktopify.git
+  https://github.com/wimpysworld/desktopify.git
   ```     
   2. go to the repo folder and download the desktop image using following commands    
 
