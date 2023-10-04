@@ -4,6 +4,10 @@
   Desktopify
 </h1>
 
+# This project is discontinued ☠️
+
+**This project initially served as a PoC for bringing [Ubuntu Desktop to Raspberry Pi](https://www.omgubuntu.co.uk/2020/10/ubuntu-20-10-raspberry-pi-4-desktop) when I worked at [Canonical](https://canonical.com/). Now that [Raspberry Pi is a release target for Ubuntu Desktop](https://ubuntu.com/download/raspberry-pi), this project has no purpose.** 
+
 <p align="center"><b>Convert Ubuntu Server for Raspberry Pi to a Desktop.</b></p>
 <!-- <div align="center"><img src=".github/screenshot.png" alt="Quickemu Screenshot" /></div> -->
 <p align="center">Made with 💝 for <img src=".github/ubuntu.png" align="top" width="18" /></p>
